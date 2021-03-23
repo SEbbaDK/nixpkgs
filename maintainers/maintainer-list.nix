@@ -8601,6 +8601,12 @@
     githubId = 19472270;
     name = "Sebastian";
   };
+  sebbadk = {
+    email = "sebastian@sebba.dk";
+    github = "SEbbaDK";
+    githubId = 1567527;
+    name = "Sebastian Hyberts";
+  };
   sellout = {
     email = "greg@technomadic.org";
     github = "sellout";
