@@ -9,6 +9,7 @@
 , squashfsTools
 , buildFHSUserEnv
 , pkgs
+, runCommand
 }:
 
 rec {
@@ -38,7 +39,8 @@ rec {
   extractType2 = extract;
   wrapType1 = wrapType2;
 
-  wrapAppImage = args@{ name, src, extraPkgs, ... }: buildFHSUserEnv
+  wrapAppImage = args@{ name, src, extraPkgs, ... }:
+  let bin = buildFHSUserEnv
     (defaultFhsEnvArgs // {
       inherit name;
 
@@ -47,6 +49,14 @@ rec {
 
       runScript = "appimage-exec.sh -w ${src}";
     } // (removeAttrs args (builtins.attrNames (builtins.functionArgs wrapAppImage))));
+  in
+  runCommand "${name}-wrapped" {} ''
+    mkdir -p "$out/share/applications"
+    ln -s ${bin}/bin $out/bin
+    desktopfile="$(find ${src} -name "*.desktop" | head -n 1)"
+    ln -s "$desktopfile" "$out/share/applications/"
+    ln -s "${src}/usr/share/icons" "$out/share/"
+  '';
 
   wrapType2 = args@{ name, src, extraPkgs ? pkgs: [ ], ... }: wrapAppImage
     (args // {
