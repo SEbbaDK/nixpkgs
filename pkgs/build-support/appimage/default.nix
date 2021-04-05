@@ -54,7 +54,8 @@ rec {
     mkdir -p "$out/share/applications"
     ln -s ${bin}/bin $out/bin
     desktopfile="$(find ${src} -name "*.desktop" | head -n 1)"
-    ln -s "$desktopfile" "$out/share/applications/"
+    binaryfile="$(find -L ${bin}/bin/ -executable -type f | head -n 1)"
+    sed "s#AppRun#$binaryfile#g" < "$desktopfile" > "$out/share/applications/${name}.desktop"
     ln -s "${src}/usr/share/icons" "$out/share/"
   '';
 
