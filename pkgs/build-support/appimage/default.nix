@@ -50,7 +50,7 @@ rec {
       runScript = "appimage-exec.sh -w ${src}";
     } // (removeAttrs args (builtins.attrNames (builtins.functionArgs wrapAppImage))));
   in
-  runCommand "${name}-wrapped" {} ''
+  runCommand name {} ''
     mkdir -p "$out/share/applications"
     ln -s ${bin}/bin $out/bin
     desktopfile="$(find ${src} -name "*.desktop" | head -n 1)"
